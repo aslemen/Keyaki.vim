@@ -1,4 +1,4 @@
-function Keyaki#drawtree#gen(mode)
+function drawtree#gen(mode)
 	let l:tempname = tempname()
 	if a:mode == 0
 		"non-visual mode
