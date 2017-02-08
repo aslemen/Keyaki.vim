@@ -23,18 +23,8 @@ nmap <buffer> <F8> {{j<F9>
 nmap <buffer> <F9> vas ! tee ~/tmp/tree<CR>:silent !/home/glenda/Desktop/share/programs/bin/ControlCalculate<CR>:redraw!<CR>
 " (re)format tree to a single line
 
+map <Leader>t Keyaki#drawtree#gen
 " setlocal fileencodings=utf-8,sjis,euc-jp,default
 
 "command Control !/home/glenda/Desktop/share/programs/bin/ControlCalculate
 "map <Leader>kc <plug>Control
-
-function Keyaki#drawtree#gen(mode)
-	let l:tempname = tempname()
-	if a:mode == 0
-		"non-visual mode
-		silent! normal gv
-	end
-
-	silent! execute "! tee " . l:tempname . ".psd"
-endfunction
-
