@@ -26,5 +26,5 @@ function! Keyaki#drawtree#gen(mode)
 endfunction
  
 function! Keyaki#drawtree#openviewer()
-	silent execute "! nohup atril  " . b:tempname . ".pdf &"
+	silent execute "! watch nohup atril  " . b:tempname . ".pdf & "
 endfunction
