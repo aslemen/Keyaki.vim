@@ -20,7 +20,11 @@ function! Keyaki#drawtree#gen(mode)
 	" restore @a
 	let @a = l:regbackup
 
-	silent execute "! generate-indexed-tree.sh " . b:tempname .  ".psd"
-	silent execute "! pdflatex -output-directory=" . fnamemodify(b:tempname, ":p:h") " " . b:tempname . "-indexed.tex"
-	silent execute "! atril" . b:tempname . "-indexed.pdf"
+	silent! execute "!" . b:Keyaki_script_dir . "/bin/gen.sh " . b:tempname .  ".psd > " . b:tempname . ".tex"
+	silent! execute "! pdflatex -output-directory=" . fnamemodify(b:tempname, ":p:h") " " . b:tempname . ".tex"
+	" execute "! nohup atril  " . b:tempname . ".pdf &"
+endfunction
+ 
+function! Keyaki#drawtree#openviewer()
+	silent execute "! nohup atril  " . b:tempname . ".pdf &"
 endfunction

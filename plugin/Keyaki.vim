@@ -3,10 +3,12 @@
 " Maintainer: Tatsuya Hayashi <net@hayashi-lin.net>
 " Last Modified: 2017 Feb 17
 
-if exists('b:did_ftplugin')
+let b:Keyaki_script_dir = expand('<sfile>:p:h') . "/.."
+
+if exists('b:did_keyaki')
   finish
 endif
-let b:did_ftplugin = 1
+let b:did_keyaki= 1
 
 call Keyaki#_init()
 

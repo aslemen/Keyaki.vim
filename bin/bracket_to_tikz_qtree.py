@@ -28,12 +28,13 @@ class LaTeXFormatter(object):
     return '''\documentclass[10pt]{%s}
 \usepackage{tikz}
 \usepackage{tikz-qtree}
-\usepackage[paperwidth=200cm,paperheight=30cm,margin=0.5cm,bottom=.3in,foot=.2in]{geometry}
 \usepackage[whole]{bxcjkjatype}
 \\begin{document}
 \\sf
 YIELD-HERE
 {\\sf''' % self.doc_opt
+
+# %\usepackage[paperwidth=200cm,paperheight=30cm,margin=0.5cm,bottom=.3in,foot=.2in]{geometry}
 
   def doc_footer(self):
     return '''}
