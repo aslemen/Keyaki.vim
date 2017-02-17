@@ -1,5 +1,5 @@
-" Keyaki settings
-
+"	 Keyaki settings
+	
 " Key Mapping 
 
 " F2 -> zo/zc: fold
@@ -23,7 +23,9 @@ nmap <buffer> <F8> {{j<F9>
 nmap <buffer> <F9> vas ! tee ~/tmp/tree<CR>:silent !/home/glenda/Desktop/share/programs/bin/ControlCalculate<CR>:redraw!<CR>
 " (re)format tree to a single line
 
-map <Leader>t Keyaki#drawtree#gen
+nmap <Leader>t :call Keyaki#drawtree#gen(0)<CR>
+vmap <Leader>t :call Keyaki#drawtree#gen(1)<CR>
+
 " setlocal fileencodings=utf-8,sjis,euc-jp,default
 
 "command Control !/home/glenda/Desktop/share/programs/bin/ControlCalculate
