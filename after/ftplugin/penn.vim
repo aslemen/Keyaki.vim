@@ -19,9 +19,9 @@ nmap <buffer> <S-F5> vas=<CR>
 nmap <buffer> <F5> <S-F5><Leader>t
 nmap <buffer> <F6> vangj
 nmap <buffer> <F6> vangj
-nmap <buffer> <S-F7> }j<F9>
+nmap <buffer> <S-F7> }j
 nmap <buffer> <F7> <S-F7><Leader>t
-nmap <buffer> <S-F8> {{j<F9>
+nmap <buffer> <S-F8> {{j
 nmap <buffer> <F8> <S-F8><Leader>t
 
 " nmap <F9> vas ! tee ~/tmp/tree<CR>:redraw!<CR>
