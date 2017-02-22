@@ -1,3 +1,11 @@
+function! Keyaki#drawtree#_init()
+	map <silent><buffer> <plug>Keyaki_text_drawtree_gen <SID>Keyaki_text_drawtree_gen
+	map <silent><buffer> <plug>Keyaki_motion_drawtree_gen <SID>Keyaki_motion_drawtree_gen
+
+	noremap <silent><buffer> <SID>Keyaki_text_drawtree_gen :<c-u>call Keyaki#drawtree#gen(0)<cr><C-L>
+	noremap <silent><buffer> <SID>Keyaki_motion_drawtree_gen :<c-u>call Keyaki#drawtree#gen(1)<cr><C-L>
+endfunction
+
 function! Keyaki#drawtree#gen(mode)
 	" backup @a
 	let l:regbackup = @a
@@ -15,7 +23,7 @@ function! Keyaki#drawtree#gen(mode)
 
 	silent! execute "redir! >".  b:tempname . ".psd"
 	silent echon @a
-	silent redir END	
+	silent redir END
 
 	" restore @a
 	let @a = l:regbackup
@@ -25,6 +33,3 @@ function! Keyaki#drawtree#gen(mode)
 	" execute "! nohup atril  " . b:tempname . ".pdf &"
 endfunction
  
-function! Keyaki#drawtree#openviewer()
-	silent execute "! watch nohup atril  " . b:tempname . ".pdf & "
-endfunction
