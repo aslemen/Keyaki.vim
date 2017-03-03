@@ -27,9 +27,11 @@ FILE=${SCRIPTPATH}${FILE}
 #fi
 
 BRACKET="./bracket_to_tikz_qtree.py --doc-option=standalone"
+#INDEXED="./parse_indexed"
+#TREE="./draw-tree -p"
 
 # stdin -> stdout
-cat $1 | parse_indexed | draw-tree -p  | \
+cat $1 | parse_indexed | munge-trees -p | \
     #perl -pe 's/NP-SBJ;{ENTITY\[([^ ]+)\]} *\*T\*/NP-SBJ;{ENTITY\[T\1\]} \*T\*/g' | \
     # get rid of case frame | \
     perl -pe 's/\((P|N);<.+?, /(\1 /g' | \
