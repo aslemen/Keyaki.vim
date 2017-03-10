@@ -80,8 +80,33 @@ if exists("b:current_syntax")
 					\'CODE',
 					\'LS',
 					\'LST',
+					\'ID',
 					\'META']
 
+		let b:penn_traces = [
+					\'\*',
+					\'\*T\*',
+					\'\*pro\*',
+					\'\*exp\*',
+					\'\*arb\*',
+					\'\*speaker\*',
+					\'\*speaker+pro\*',
+					\'\*hearer\*',
+					\'\*speaker+hearer\*']
+		let b:penn_traces_in_tags = [
+					\'\*',
+					\'\*SBJ\*',
+					\'\*OB1\*',
+					\'\*OB2\*',
+					\'\*ICH\*-1',
+					\'\*ICH\*-2',
+					\'\*ICH\*-3',
+					\'\*ICH\*-4',
+					\'\*ICH\*-5',
+					\'\*ICH\*-6',
+					\'\*ICH\*-7',
+					\'\*ICH\*-8',
+					\'\*ICH\*-9']
 		call penn#syntax#_init()
 	endif
 endif
