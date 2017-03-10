@@ -27,6 +27,7 @@ if exists("b:current_syntax")
 					\'PNL',
 					\'PRO',
 					\'Q',
+					\'Q+N',
 					\'SCON',
 					\'SYM',
 					\'VB',
@@ -85,6 +86,11 @@ if exists("b:current_syntax")
 
 		let b:penn_traces = [
 					\'\*',
+					\'\*が*\',
+					\'\*を*\',
+					\'\*に*\',
+					\'\*で*\',
+					\'\*によって*\',
 					\'\*T\*',
 					\'\*pro\*',
 					\'\*exp\*',
