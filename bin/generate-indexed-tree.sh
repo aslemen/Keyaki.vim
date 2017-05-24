@@ -1,12 +1,14 @@
 # generate-indexed-tree.sh FILE.psd
 # creates FILE-indexed.pdf
 
-#ALT=F
+ALT=F
 
 # Absolute path to this script, e.g. /home/user/bin/foo.sh
 SCRIPT=$(readlink -f "$0")
 # Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=$(dirname "$SCRIPT")
+
+PATH=$SCRIPTPATH:$PATH
 
 while [ $# -gt 0 ]
 do
@@ -18,20 +20,18 @@ do
 done
 
 FILE=`echo $1 | sed 's/\.psd$//'`
-FILE=${SCRIPTPATH}${FILE}
 
-#if [ "$ALT" = "T" ]; then
-#    BRACKET="~/Desktop/share/general/emacs-keyaki-mode/bin/bracket_to_tikz_qtree_alt.py"
-#else
-#    BRACKET="~/Desktop/share/general/emacs-keyaki-mode/bin/bracket_to_tikz_qtree.py"
-#fi
 
-BRACKET="./bracket_to_tikz_qtree.py --doc-option=standalone"
-#INDEXED="./parse_indexed"
-#TREE="./draw-tree -p"
+if [ "$ALT" = "T" ]; then
+    BRACKET=$SCRIPTPATH"/bracket_to_tikz_qtree_alt.py"
+else
+    BRACKET=$SCRIPTPATH"/bracket_to_tikz_qtree.py"
+fi
 
-# stdin -> stdout
-cat $1 | parse_indexed | munge-trees -p | \
+cd /tmp
+
+cat $1 | parse_indexed --iml > ${FILE}-indexed.psd
+draw-tree -p < ${FILE}-indexed.psd | \
     #perl -pe 's/NP-SBJ;{ENTITY\[([^ ]+)\]} *\*T\*/NP-SBJ;{ENTITY\[T\1\]} \*T\*/g' | \
     # get rid of case frame | \
     perl -pe 's/\((P|N);<.+?, /(\1 /g' | \
@@ -40,9 +40,9 @@ cat $1 | parse_indexed | munge-trees -p | \
     perl -pe 's/;({,[^ ]+,})//g' | \
     sed 's/_[0-9][0-9][0-9][0-9]_[0-9][0-9][0-9][0-9]//g' | \
     # convert to latex
-    eval "${SCRIPTPATH}/${BRACKET}" | \
+    eval ${BRACKET} | \
     # format index info
-		#perl -pe 's/\[\.([^ ]+);(\\{[^ ]+\\})/\[\.\\begin{tabular}[t]{c}\1\\\\[-1ex]{\\scriptsize\\textcolor{blue}{\2}}\\end{tabular}/g' | \
+#    perl -pe 's/\[\.([^ ]+);(\\{[^ ]+\\})/\[\.\\begin{tabular}[t]{c}\1\\\\[-1ex]{\\scriptsize\\textcolor{blue}{\2}}\\end{tabular}/g' | \
 	perl -pe 's/ ([^ ]+);(\\{[^ ]+\\})/ \\begin{tabular}[t]{c}\1\\\\[-1ex]{\\scriptsize\\textcolor{blue}{\2}}\\end{tabular}/g' | \
 	perl -pe 's/\[\.([^ ]+);(<[^ ]+>)/\[\.\\begin{tabular}[t]{c}\1\\\\[-1ex]{\\scriptsize\\textcolor{blue}{\2}}\\end{tabular}/g' | \
 	# format folded node
@@ -59,15 +59,18 @@ s/ATTRIBUTE/ATR/g
 s/ATTRIB/A/g
 s/EVENT/EV/g 
 s/PERSON/P/g
-' | \
-	eval "sh ${SCRIPTPATH}/control-arrow.sh" | \
-	perl -pe 's/!(.+?)!/\\textcolor{red}{\1}/g' | \
-	sed 's/^YIELD-HERE//' 
+' | control-arrow.sh > ${FILE}-indexed.tex
 
-#case $FILE in
-#    *tmp-grep*)
-#    ;;
-#    *)
-#	sed -i '/^YIELD-HERE/e cat ~/tmp/tmp-yield.txt' ${FILE}-indexed.tex
-#	;;
-#esac
+perl -pe 's/!(.+?)!/\\textcolor{red}{\1}/g' -i ${FILE}-indexed.tex
+
+case $FILE in
+    *tmp-grep*)
+    ;;
+    *)
+	sed -i '/^YIELD-HERE/e cat /tmp/tmp-yield.txt' ${FILE}-indexed.tex
+	;;
+esac
+
+sed -i 's/^YIELD-HERE//' ${FILE}-indexed.tex
+
+pdflatex ${FILE}-indexed.tex

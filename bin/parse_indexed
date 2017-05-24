@@ -20,7 +20,7 @@ DESCRIPTION
 OPTIONS
 END
 
-cat $0 | grep " \# " 1>&2
+cat $0 | grep ") *\# " 1>&2
 
 }
 
@@ -39,7 +39,7 @@ cat 1>&2 << END
 END
 
 cat << DEMO1 | $0 | munge-trees -p | sed 's/^/      -| /' 1>&2
-( (IP-MAT (CONJ But) (NP-SBJ (PRO they) (CP-REL (WNP-1 0) (C that) (IP-SUB (NP-SBJ *T*-1) (VBP fight) (SENSE *fight.0*) (PP (P for) (NP (N freedom)))))) (, ,) (VBP undertake) (SENSE *undertake.0*) (NP-OB1 (D The) (ADJS noblest) (N cause) (CP-REL (WNP-2 0) (C 0) (IP-SUB (NP-OB1 *T*-2) (NP-SBJ (N mankind)) (MD can) (HV have) (SENSE *have.4*) (PP (P at) (NP (N stake))))))) (ID 53_BUFFALO;CLARK-1853;ME))
+( (IP-MAT (CONJ But) (NP-SBJ (PRO they) (CP-REL (WNP-1 0) (C that) (IP-SUB (NP-SBJ *T*-1) (VBP fight) (SENSE *fight.0*) (PP (P for) (NP (N freedom)))))) (, ,) (VBP undertake) (SENSE *undertake.0*) (NP-OB1 (D The) (ADJS noblest) (N cause) (CP-REL (WNP-2 0) (C 0) (IP-SUB (NP-OB1 *T*-2) (NP-SBJ (N mankind)) (MD can) (HV have) (SENSE *have.4*) (PP (P at) (NP (N stake))))))) (ID 53_BUFFALO;CLARK-1853;EN))
 DEMO1
 
 cat 1>&2 << END
@@ -76,11 +76,20 @@ while test $# -gt 0 ; do
       --noreset)     # do not reset variables with each example
          NORESET=1 ; shift ;;
 
+      --iml)         # add CONJP IML layers
+         IML=1 ; shift ;;
+
+      --salsa)       # Salsa support
+         SALTO=1 ; shift ;;
+
+      --coindex)     # Coindexation
+         COINDEX=1 ; shift ;;
+
+      --robust)      # be as robust as possible
+         ROBUST=1 ; shift ;;
+
       --framenet)    # Framenet support
          FRAMENET=1 ; shift ;;
-
-      --raise)       # raise argument information
-         RAISE=1 ; shift ;;
 
       --debug)       # keep tree and sed information for debugging
          DEBUG=1 ; shift ;;
@@ -110,12 +119,26 @@ TEMP2=${TMP:-"/tmp"}/output_gather2$$
 TEMP3=${TMP:-"/tmp"}/output_gather3$$
 
 # gather input
-tsurgeon_script ${SCRIPTS}/head_add.tsurgeon | tree_number_terminals --sent > ${TEMP1}
+if test ${IML}; then
+  tsurgeon_script "${SCRIPTS}/add_conjp_iml.tsurgeon" "${SCRIPTS}/head_add.tsurgeon"
+else
+  tsurgeon_script "${SCRIPTS}/head_add.tsurgeon"
+fi | \
+tree_number_terminals --sent > "${TEMP1}"
 
 # process to retrieve indexing
-cat ${TEMP1} | \
-parse_normalize --bind_embeddings --wh --changefloat | \
-if test ${NORESET}; then
+cat "${TEMP1}" | \
+if test ${ROBUST}; then
+  parse_normalize --bind_embeddings --wh --changefloat --robust
+else
+  parse_normalize --bind_embeddings --wh --changefloat
+fi | \
+if test "${DEBUG}"; then
+  tee output.realtree
+else
+  cat
+fi | \
+if test "${NORESET}"; then
   see_sct
 else
   see_sct --reset
@@ -125,20 +148,23 @@ lang_to_frames --script | \
 sed '
 s/__hyphen__/-/g
 s/__dot__/・/g
-' > ${TEMP2}
 
-if test ${DEBUG}; then
-  cat ${TEMP1} > output.tree
-  cat ${TEMP2} > output.sed
+## the following deletion makes robust, but to find errors it should be commented out
+/,\/gi$/d
+' > "${TEMP2}"
+
+if test "${DEBUG}"; then
+  cat "${TEMP1}" > output.tree
+  cat "${TEMP2}" > output.sed
 fi
 
 # integrate indexing
-for i in $(seq $(cat ${TEMP1} | wc -l));
+for i in $(seq $(cat "${TEMP1}" | wc -l));
 do
-  cat ${TEMP2} | select_data ${i} > ${TEMP3}
+  cat "${TEMP2}" | select_data "${i}" > "${TEMP3}"
 
-  cat ${TEMP1} | sed -n ${i}p | \
-  sed -f ${TEMP3} | \
+  cat "${TEMP1}" | sed -n "${i}"p | \
+  sed -f "${TEMP3}" | \
   tree_to_table | \
 awk '
 { 
@@ -149,18 +175,22 @@ print $1, $2 (extra ? ";" extra : ""), token
 ' | \
   table_to_tree
 
-  rm -f ${TEMP3}
+  rm -f "${TEMP3}"
 done | \
-if test ${FRAMENET}; then
-  tsurgeon_script ${SCRIPTS}/integrate_indexing.tsurgeon ${SCRIPTS}/framenet_support.tsurgeon ${SCRIPTS}/raise_argument_info.tsurgeon
-elif test ${RAISE}; then
-  tsurgeon_script ${SCRIPTS}/integrate_indexing.tsurgeon ${SCRIPTS}/raise_argument_info.tsurgeon
+if test "${COINDEX}"; then
+  tsurgeon_script "${SCRIPTS}/integrate_indexing.tsurgeon" "${SCRIPTS}/framenet_support.tsurgeon" "${SCRIPTS}/framenet_support_coindex.tsurgeon"
+elif test "${FRAMENET}"; then
+  tsurgeon_script "${SCRIPTS}/integrate_indexing.tsurgeon" "${SCRIPTS}/framenet_support.tsurgeon"
+elif test "${SALTO}"; then
+  tsurgeon_script "${SCRIPTS}/integrate_indexing.tsurgeon" "${SCRIPTS}/salsa_support.tsurgeon"
 else
-  tsurgeon_script ${SCRIPTS}/integrate_indexing.tsurgeon
+  tsurgeon_script "${SCRIPTS}/integrate_indexing.tsurgeon"
 fi
 
-# report when no analysis from run_sct
-awk '$1 == "###" { num++; getline; if (!$0) print "No analysis: " num }' ${TEMP2} 1>&2
+if test "${DEBUG}"; then
+  # report when no analysis from run_sct
+  awk '$1 == "###" { num++; getline; if (!$0) print "No analysis: " num }' "${TEMP2}" 1>&2
+fi
 
-rm -f ${TEMP1} ${TEMP2}
+rm -f "${TEMP1}" "${TEMP2}"
 

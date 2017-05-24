@@ -28,7 +28,7 @@ function! Keyaki#drawtree#gen(mode)
 	" restore @a
 	let @a = l:regbackup
 
-	silent! execute "!" . b:Keyaki_script_dir . "/bin/gen.sh " . b:tempname .  ".psd > " . b:tempname . ".tex"
+	silent! execute "!" . b:Keyaki_script_dir . "/bin/generate-indexed-tree.sh " . b:tempname .  ".psd > " . b:tempname . ".tex"
 	silent! execute "! pdflatex -output-directory=" . fnamemodify(b:tempname, ":p:h") " " . b:tempname . ".tex"
 	" execute "! nohup atril  " . b:tempname . ".pdf &"
 endfunction
