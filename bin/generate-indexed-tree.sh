@@ -8,7 +8,7 @@ SCRIPT=$(readlink -f "$0")
 # Absolute path this script is in, thus /home/user/bin
 SCRIPTPATH=$(dirname "$SCRIPT")
 
-PATH=$SCRIPTPATH:$PATH
+PATH=$PATH:$SCRIPTPATH
 
 while [ $# -gt 0 ]
 do
@@ -23,12 +23,12 @@ FILE=`echo $1 | sed 's/\.psd$//'`
 
 
 if [ "$ALT" = "T" ]; then
-    BRACKET=$SCRIPTPATH"/bracket_to_tikz_qtree_alt.py"
+    BRACKET="bracket_to_tikz_qtree_alt.py"
 else
-    BRACKET=$SCRIPTPATH"/bracket_to_tikz_qtree.py"
+    BRACKET="bracket_to_tikz_qtree.py"
 fi
 
-cd /tmp
+#cd /tmp
 
 cat $1 | parse_indexed --iml > ${FILE}-indexed.psd
 draw-tree -p < ${FILE}-indexed.psd | \
@@ -48,7 +48,7 @@ draw-tree -p < ${FILE}-indexed.psd | \
 	# format folded node
 	perl -pe 's/BEGIN-FOLD([^ ]+)END-FOLD/\\begin{tabular}[t]{l}\1\\end{tabular}/g' | \
 	    sed 's/</$<$/g' | sed 's/>/$>$/g' | \
-    # some other formatting
+#    # some other formatting
 	    sed '
 s/;<,[^<>]*[[:digit:]]\+:[[:digit:]]\+@h,[^<>]*>//g
 s/,EVENT\[[[:digit:]]\+\]@EVENT\>//g
@@ -59,18 +59,18 @@ s/ATTRIBUTE/ATR/g
 s/ATTRIB/A/g
 s/EVENT/EV/g 
 s/PERSON/P/g
-' | control-arrow.sh > ${FILE}-indexed.tex
-
-perl -pe 's/!(.+?)!/\\textcolor{red}{\1}/g' -i ${FILE}-indexed.tex
-
-case $FILE in
-    *tmp-grep*)
-    ;;
-    *)
-	sed -i '/^YIELD-HERE/e cat /tmp/tmp-yield.txt' ${FILE}-indexed.tex
-	;;
-esac
-
-sed -i 's/^YIELD-HERE//' ${FILE}-indexed.tex
-
-pdflatex ${FILE}-indexed.tex
+	' | control-arrow.sh | \
+#	> ${FILE}-indexed.tex
+	perl -pe 's/!(.+?)!/\\textcolor{red}{\1}/g' 
+#
+#case $FILE in
+#    *tmp-grep*)
+#    ;;
+#    *)
+#	sed -i '/^YIELD-HERE/e cat /tmp/tmp-yield.txt' ${FILE}-indexed.tex
+#	;;
+#esac
+#
+#sed -i 's/^YIELD-HERE//' ${FILE}-indexed.tex
+#
+#pdflatex ${FILE}-indexed.tex
