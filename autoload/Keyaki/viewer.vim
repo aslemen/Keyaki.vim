@@ -4,6 +4,12 @@ function! Keyaki#viewer#_init()
 	noremap <silent><buffer> <SID>Keyaki_openviewer :<c-u>call Keyaki#viewer#open()<cr>
 endfunction
 
-function! Keyaki#viewer#open()
-	silent execute "! watch nohup atril  " . b:tempname . ".pdf & "
+function! Keyaki#viewer#open(filename)
+	if a:filename == ""
+		l:filename = b:tempname
+	else
+		l:filename = a:filename
+	endif
+
+	silent execute "! firefox " . l:filename . " &"
 endfunction
