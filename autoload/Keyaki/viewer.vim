@@ -6,9 +6,9 @@ endfunction
 
 function! Keyaki#viewer#open(filename)
 	if a:filename == ""
-		l:filename = b:tempname
+		let l:filename = b:tempname
 	else
-		l:filename = a:filename
+		let l:filename = a:filename
 	endif
 
 	silent execute "! firefox " . l:filename . " &"

@@ -29,9 +29,9 @@ function! Keyaki#drawtree#gen(mode)
 	let @a = l:regbackup
 
 	" generate tree via parse_story
-	execute "!" . b:Keyaki_script_dir . "/bin/parse_story" . b:tempname . ".psd > " . b:tempname . ".html"
+	execute "! cat " . b:tempname . ".psd | " .  "parse_story > " . b:tempname . ".html"
 	" launch the browser
-	Keyaki#viewer#open(b:tempname . ".html")
+	call Keyaki#viewer#open(b:tempname . ".html")
 
 	"silent! execute "!" . b:Keyaki_script_dir . "/bin/generate-indexed-tree.sh " . b:tempname .  ".psd > " . b:tempname . ".tex"
 	"silent! execute "! pdflatex -output-directory=" . fnamemodify(b:tempname, ":p:h") " " . b:tempname . ".tex"
