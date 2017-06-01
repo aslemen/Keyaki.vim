@@ -21,8 +21,8 @@ Set the buffer-local variables `blahblah` and `blahblah` before loading the plug
 |:--------|:-------:|:-----------|-----------|
 | `<F3>` `<LocalLeader>s/` | Normal | `<plug>Keyaki_command_search_sentence_forward` | search sentences by ID forward|
 | `<S-F3>` `<LocalLeader>s?` | Normal | `<plug>Keyaki_command_search_sentence_backward` | search sentences by ID backward |
-| `<F4>` `<LocalLeader>s/` | Normal | `<plug>Keyaki_command_search_tag_forward` | search tags by ID forward |
-| `<S-F4>` `<LocalLeader>s?` | Normal | `<plug>Keyaki_command_search_tag_backward` | search tags by ID backward |
+| `<F4>` `<LocalLeader>s/` | Normal | `<plug>Keyaki_command_search_tag_forward` | search tags by tag forward |
+| `<S-F4>` `<LocalLeader>s?` | Normal | `<plug>Keyaki_command_search_tag_backward` | search tags by tag backward |
 | `<F5>` | Normal | `<S-F5><LocalLeader>g` | indent the whole sentence & generate the tree diagram in the SVG format |
 | `<S-F5>` | Normal | `vas=` | indent the whole sentence |
 | `<F6>` | Normal | `vanJ` | linearize the whole node |
