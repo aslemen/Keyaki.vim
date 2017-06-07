@@ -6,10 +6,10 @@ endfunction
 
 function! Keyaki#viewer#open(filename)
 	if a:filename == ""
-		let l:filename = b:tempname
+		let l:filename = b:tempname . ".svg"
 	else
 		let l:filename = a:filename
 	endif
 
-	silent execute "! firefox " . l:filename . " &"
+	silent execute "! eom " . l:filename . " &"
 endfunction

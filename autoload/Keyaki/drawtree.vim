@@ -7,6 +7,9 @@ function! Keyaki#drawtree#_init()
 endfunction
 
 function! Keyaki#drawtree#gen(mode)
+	let l:file_psd = b:tempname . ".psd"
+	let l:file_svg = b:tempname . ".svg"
+
 	" backup @a
 	let l:regbackup = @a
 
@@ -21,7 +24,7 @@ function! Keyaki#drawtree#gen(mode)
 	" yank the selected area to @a
 	silent! normal! "ay
 
-	silent! execute "redir! >".  b:tempname . ".psd"
+	silent! execute "redir! >" . l:file_psd
 	silent echon @a
 	silent redir END
 
@@ -29,12 +32,8 @@ function! Keyaki#drawtree#gen(mode)
 	let @a = l:regbackup
 
 	" generate tree via parse_story
-	execute "! cat " . b:tempname . ".psd | " .  "parse_story > " . b:tempname . ".html"
+	execute "! cat ". l:file_psd . " | " .  "parse_svg > " l:file_svg 
 	" launch the browser
-	call Keyaki#viewer#open(b:tempname . ".html")
-
-	"silent! execute "!" . b:Keyaki_script_dir . "/bin/generate-indexed-tree.sh " . b:tempname .  ".psd > " . b:tempname . ".tex"
-	"silent! execute "! pdflatex -output-directory=" . fnamemodify(b:tempname, ":p:h") " " . b:tempname . ".tex"
-	" execute "! nohup atril  " . b:tempname . ".pdf &"
+	call Keyaki#viewer#open(l:file_svg)
 endfunction
  
