@@ -1,3 +1,80 @@
-snippet (IP "Relative Copula"
+snippet (I "Relative Copula"
 (IP-REL (NP-SBJ *T*) (NP-PRD $0) (AX の))
+endsnippet
+
+snippet (I "Relative Copula (covert)"
+(IP-REL (NP-SBJ *T*) (NP-PRD $0) (AX *))
+endsnippet
+
+snippet (N "Noun Phrase"
+(NP$0 (PRO $1))
+endsnippet
+
+snippet (N "Pronominal"
+(NP$0 (PRO *pro*))
+endsnippet
+
+snippet (N "Pronominal (speaker)"
+(NP$0 (PRO *speaker*))
+endsnippet
+
+snippet (N "Pronominal (hearer)"
+(NP$0 (PRO *hearer*))
+endsnippet
+
+snippet (N "Pronominal (arbitrary)"
+(NP$0 (PRO *arb*))
+endsnippet
+
+snippet (N "Pronominal (expletive)"
+(NP$0 (PRO *exp*))
+endsnippet
+
+snippet (P "Postposition Phrase"
+(PP $1 (P $0))
+endsnippet
+
+snippet (P "PP with functions"
+(PP (NP $3) (P $0))
+(NP$1 $2)
+endsnippet
+
+snippet (P "Subject PP (with no case marker)"
+(PP (NP $1) (P $0))
+(NP-SBJ *)
+endsnippet
+
+snippet (P "Subject PP (with case markers)"
+(PP (NP $1) (P $0))
+(NP-SBJ *$0*)
+endsnippet
+
+snippet (P "2nd Subject PP (with no case marker)"
+(PP (NP $1) (P $0))
+(NP-SBJ2 *)
+endsnippet
+
+snippet (P "2nd Subject PP (with case markers)"
+(PP (NP $1) (P $0))
+(NP-SBJ2 *$0*)
+endsnippet
+
+snippet (P "Object PP (with no case marker)"
+(PP (NP $1) (P $0))
+(NP-OB1 *)
+endsnippet
+
+snippet (P "Object PP (with case markers)"
+(PP (NP $1) (P $0))
+(NP-OB2 *$0*)
+endsnippet
+
+snippet (P "2nd object PP (with no case marker)"
+(PP (NP $1) (P $0))
+(NP-OB2 *)
+endsnippet
+
+snippet (P "2nd object PP (with case markers)"
+(PP (NP $1) (P $0))
+(NP-OB2 *$0*)
 endsnippet
