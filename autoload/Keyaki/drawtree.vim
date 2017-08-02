@@ -7,6 +7,9 @@ function! Keyaki#drawtree#_init()
 endfunction
 
 function! Keyaki#drawtree#gen(mode)
+	" make a new temporarily file
+	let b:tempname = tempname()
+
 	let l:file_psd = b:tempname . ".psd"
 	let l:file_svg = b:tempname . ".svg"
 
@@ -28,11 +31,12 @@ function! Keyaki#drawtree#gen(mode)
 	silent echon @a
 	silent redir END
 
-	" restore @a
+	" restore @
 	let @a = l:regbackup
 
 	" generate tree via parse_story
-	execute "! cat ". l:file_psd . " | " .  "parse_svg > " l:file_svg 
+	call system(join(["<", l:file_psd, "|"] + b:Keyaki_drawtree_command + [">", l:file_svg]), " ")
+
 	" launch the browser
 	call Keyaki#viewer#open(l:file_svg)
 endfunction

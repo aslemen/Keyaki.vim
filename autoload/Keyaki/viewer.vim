@@ -1,6 +1,6 @@
 function! Keyaki#viewer#_init()
 	map <silent><buffer> <plug>Keyaki_openviewer <SID>Keyaki_openviewer
-	noremap <silent><buffer> <SID>Keyaki_openviewer :<c-u>call Keyaki#viewer#open()<cr>
+	noremap <silent><buffer> <SID>Keyaki_openviewer :<c-u>call Keyaki#viewer#open("")<cr>
 endfunction
 
 function! Keyaki#viewer#open(filename)
@@ -10,5 +10,5 @@ function! Keyaki#viewer#open(filename)
 		let l:filename = a:filename
 	endif
 
-	silent execute "! eom " . l:filename . " &"
+	let b:viewer_proc = jobstart(["eog", "--single-window",  l:filename])
 endfunction
